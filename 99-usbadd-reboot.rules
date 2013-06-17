@@ -1,0 +1,1 @@
+KERNEL=="sd*", ACTION=="add", DRIVERS=="usb", SUBSYSTEMS=="usb", RUN+="/root/bin/usbadd-reboot.sh %E{ID_SERIAL} %E{DEVNAME}"
