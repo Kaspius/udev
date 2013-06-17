@@ -1,0 +1,10 @@
+# import FS information from blkid
+KERNEL=="sd*", DRIVERS=="usb", SUBSYSTEMS=="usb", IMPORT{program}="/sbin/blkid -o udev -p $tempnode"
+# mount vfat/fat
+ACTION=="add", ENV{ID_FS_LABEL}!="", ENV{mnt_dir}="%E{ID_FS_LABEL}", ENV{ID_FS_TYPE}=="vfat|fat", RUN+="/bin/mkdir -p /mnt/udisk/%E{mnt_dir}", RUN+="/bin/mount LABEL=%E{ID_FS_LABEL} /mnt/udisk/%E{mnt_dir}"
+ACTION=="add", ENV{ID_FS_LABEL}=="", ENV{mnt_dir}="%k", ENV{ID_FS_TYPE}=="vfat|fat", RUN+="/bin/mkdir -p /mnt/udisk/%E{mnt_dir}", RUN+="/bin/mount /dev/%k /mnt/udisk/%E{mnt_dir}"
+# mount ntfs
+ACTION=="add", ENV{ID_FS_LABEL}!="", ENV{mnt_dir}="%E{ID_FS_LABEL}", ENV{ID_FS_TYPE}=="ntfs", RUN+="/bin/mkdir -p /mnt/udisk/%E{mnt_dir}", RUN+="/bin/mount -t ntfs LABEL=%E{ID_FS_LABEL} /mnt/udisk/%E{mnt_dir}"
+ACTION=="add", ENV{ID_FS_LABEL}=="", ENV{mnt_dir}="%k", ENV{ID_FS_TYPE}=="ntfs", RUN+="/bin/mkdir -p /mnt/udisk/%E{mnt_dir}", RUN+="/bin/mount -t ntfs /dev/%k /mnt/udisk/%E{mnt_dir}"
+# remove usbkey and umount it
+KERNEL=="sd*", ACTION=="remove", DRIVERS=="usb", SUBSYSTEMS=="usb", RUN+="/bin/umount /dev/%k"
